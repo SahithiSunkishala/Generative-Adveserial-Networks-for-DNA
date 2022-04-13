@@ -38,7 +38,3 @@ Fast Convergence CGAN     0.7719    	  0.8291	    0.7136    0.5466    0.7561    
 References: https://academic.oup.com/nargab/article/2/2/lqaa031/5831011#209720175
 
 
-
-
-![image](https://user-images.githubusercontent.com/102439554/163269476-8e34bf43-5a7d-4da7-9679-9f0edd45c4df.png)
-
