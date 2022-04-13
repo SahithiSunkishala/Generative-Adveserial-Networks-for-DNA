@@ -24,6 +24,7 @@ FC-CGAN – the discriminator has an advanced auxiliary classifier which disting
 
 
 <img width="850" alt="image" src="https://user-images.githubusercontent.com/102439554/163270182-2c38d965-41a5-46bd-ae35-a7ae5ef9c8b5.png">
+bestmodels link: https://uhdowntown-my.sharepoint.com/:f:/g/personal/sunkishalas1_gator_uhd_edu/EvnzIEVw0BVKh_szydulUf4BuNtDoHqQ9w0MZMOJoDLuFg?e=wIiaky
 
 Conclusion:
 
