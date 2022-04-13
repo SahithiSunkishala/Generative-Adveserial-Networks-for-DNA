@@ -1,7 +1,7 @@
 # Generative-Adveserial-Networks-for-DNA
 
-**Generative Adversarial Networks to increase DNA data size and discover RNA recognition patterns of CTCF
-Sahithi Sunkishala
+**Generative Adversarial Networks to increase DNA data size and discover RNA recognition patterns of CTCF**
+**Sahithi Sunkishala**
 Dr.Soibam Benjamin, Research Mentor, DEPARTMENT OF COMPUTER SCIENCE & ENGINEERING TECHNOLOGY, UHD.
 
 **Abstract:
@@ -26,7 +26,7 @@ FC_CGAN – the discriminator has an advanced auxiliary classifier which disting
 <img width="850" alt="image" src="https://user-images.githubusercontent.com/102439554/163270182-2c38d965-41a5-46bd-ae35-a7ae5ef9c8b5.png">
 bestmodels link: https://uhdowntown-my.sharepoint.com/:f:/g/personal/sunkishalas1_gator_uhd_edu/EvnzIEVw0BVKh_szydulUf4BuNtDoHqQ9w0MZMOJoDLuFg?e=wIiaky
 
-**Conclusion:
+**Conclusion:**
 
 We were able to increase the accuracy of the model to 79% using CGAN model. This tells us that the 30000 fake data generated is not entirely useful in improving the model accuracy. This might be due to the class labels not classified correctly as Conditional GAN doesn’t generate labels data.  Hence we have decided to use GAN methods which can generate class labels for fake data such as Auxiliary Classifier GAN. 
 
