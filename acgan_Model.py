@@ -238,9 +238,6 @@ loss1 = pd.DataFrame({'fake' : d_f1_epoch, 'real' : d_r1_epoch})
 
 loss2 = pd.DataFrame({'fake_class' : d_f2_epoch, 'real_class' : d_r2_epoch})
 
-
-headerList = ['fakeloss_x' ,'fakeloss_y' , 'realloss_x', 'realloss_y']
-
 loss1.to_csv('Loss1.csv')
 loss2.to_csv('Loss2.csv')
       
