@@ -25,11 +25,7 @@ AC - CGAN - the input to the discriminator is a DNA sequence data and its labels
 FC-CGAN – the discriminator has an advanced auxiliary classifier which distinguishes each real class from an extra ‘fake’ class. The ‘fake’ class avoids mixing generated data with real data, which can potentially confuse the classification of real data as AC-GAN does, and makes the advanced auxiliary classifier behave as another real/fake classifier.
 
 
-![Uploading image.png…]()
-
-
-
-
+<img width="850" alt="image" src="https://user-images.githubusercontent.com/102439554/163270182-2c38d965-41a5-46bd-ae35-a7ae5ef9c8b5.png">
 
 
 
