@@ -17,15 +17,22 @@ Discriminator:
 CGAN - For CGAN, the inputs to the discriminator are DNA sequence data and its labels. The output is the probability that the image is real or fake.
 
 
-
-
-
 AC - CGAN - the input to the discriminator is a DNA sequence data and its labels, whilst the output is the probability that the image is real and its class label.
 
 FC-CGAN – the discriminator has an advanced auxiliary classifier which distinguishes each real class from an extra ‘fake’ class. The ‘fake’ class avoids mixing generated data with real data, which can potentially confuse the classification of real data as AC-GAN does, and makes the advanced auxiliary classifier behave as another real/fake classifier.
+<img width="628" alt="image" src="https://user-images.githubusercontent.com/102439554/163279641-30ed3414-86c6-4798-8b7d-4b75b04e25a6.png">
 
 
 <img width="850" alt="image" src="https://user-images.githubusercontent.com/102439554/163270182-2c38d965-41a5-46bd-ae35-a7ae5ef9c8b5.png">
+
+Conclusion:
+
+We were able to increase the accuracy of the model to 79% using CGAN model. This tells us that the 30000 fake data generated is not entirely useful in improving the model accuracy. This might be due to the class labels not classified correctly as Conditional GAN doesn’t generate labels data.  Hence we have decided to use GAN methods which can generate class labels for fake data such as Auxiliary Classifier GAN. 
+
+
+The auxiliary classifier assigns each real sample to its specific class and each generated sample to the class corresponding to the generator input. From the real vs fake loss plot we can see that the AC GAN model is not saturating after a point and it is converging. Also from the class label real vs fake plot we can see that assigning fake DNA data with their class labels the same way as real data is confusing the auxiliary classifier.
+
+To overcome this we have implemented Fast convergence GAN that introduces an advanced auxiliary classifier for the purposes of fast convergence and improved quality. FC-GAN has proved to generate images and classify images correctly to real or fake labels but FC-GAN model discriminator needs improvement as it is not able to classify the class labels as expected for DNA sequence data and there is no improvement in accuracy.
 
 
 
