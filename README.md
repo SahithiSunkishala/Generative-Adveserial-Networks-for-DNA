@@ -4,7 +4,7 @@
 **Sahithi Sunkishala**
 Dr.Soibam Benjamin, Research Mentor, DEPARTMENT OF COMPUTER SCIENCE & ENGINEERING TECHNOLOGY, UHD.
 
-**Abstract:
+**Abstract:**
 
 A DNA motif is defined as a nucleic acid sequence pattern that has some biological significance such as being DNA binding sites for a regulatory protein. Deep learning models have been successfully applied to extract DNA sequence motifs and regulatory grammars in the context of transcription factor binding. The goal of this project is to identify chromatin motifs representing short and recurring patterns exhibited by 12 epigenetic modifications, CTCF, and RAD21 binding signals in  boundaries of topologically associated boundaries. RNA is a critical component of chromatin in eukaryotes. We have used previously developed DeepLncCTCF, a new deep learning model based on a convolutional neural network and a bidirectional long short-term memory network, to discover the RNA recognition patterns of CTCF and identify candidate lncRNAs binding to CTCF and evaluated on human U2OS dataset. 
 
@@ -38,5 +38,11 @@ To overcome this we have implemented Fast convergence GAN that introduces an adv
 
 
 References: https://academic.oup.com/nargab/article/2/2/lqaa031/5831011#209720175
+
+https://machinelearningmastery.com/how-to-develop-an-auxiliary-classifier-gan-ac-gan-from-scratch-with-keras/#:~:text=The%20Auxiliary%20Classifier%20GAN%2C%20or,than%20receive%20it%20as%20input
+
+https://arxiv.org/abs/1805.01972
+
+
 
 
