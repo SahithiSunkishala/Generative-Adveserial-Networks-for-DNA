@@ -59,9 +59,9 @@ def define_discriminator(in_shape=(201,4),n_classes = 2):
     in_image = Input(shape=in_shape)
     # concat label as a channel
     merge = Concatenate()([in_image, li])
-    fe = Conv1D(64, 2, padding='same')(merge)
+    fe = Conv1D(64, 5, padding='same')(merge)
     fe = LeakyReLU(alpha=0.1)(fe)
-    fe = Conv1D(64, 2, padding='same')(fe)
+    fe = Conv1D(64, 5, padding='same')(fe)
     fe = LeakyReLU(alpha=0.1)(fe)
     # flatten feature maps
     fe = Flatten()(fe)
@@ -81,16 +81,14 @@ def define_generator(latent_dim, n_classes=10):
     in_label = Input(shape=(1,))
     # embedding for categorical input
     li = Embedding(n_classes, latent_dim,trainable=True)(in_label)
-   
     # linear multiplication
     n_nodes = 201*4
     li = Dense(n_nodes)(li)
     li = Reshape((201,4))(li)
     in_lat = Input(shape=(latent_dim,))
-    gen = Dense(n_nodes)(in_lat)
+    gen = Dense(320)(in_lat)
     gen = LeakyReLU(alpha=0.2)(gen)
     gen = Dense(n_nodes)(gen)
-    gen = LeakyReLU(alpha=0.2)(gen)
     gen = Reshape((201,4))(gen)
     merge = Concatenate()([gen, li])
     out_layer = Conv1D(4, 2, activation='tanh', padding='same')(merge)
@@ -271,7 +269,7 @@ print(gan_model.summary())
 
 #train
 #train
-(g_loss_epoch,d_real_loss_epoch,d_fake_loss_epoch) = train(g_model, d_model, gan_model, (X_train,Y_train), latent_dim,n_epochs=700, n_batch=10000,n_classes=2)
+(g_loss_epoch,d_real_loss_epoch,d_fake_loss_epoch) = train(g_model, d_model, gan_model, (X_train,Y_train), latent_dim,n_epochs=700, n_batch=200,n_classes=2)
 
 import pandas as pd
 loss1 = pd.DataFrame({'fake' : d_fake_loss_epoch, 'real' : d_real_loss_epoch})
@@ -283,13 +281,106 @@ headerList = ['fakeloss_x' ,'fakeloss_y' , 'realloss_x', 'realloss_y']
 
 loss1.to_csv('Loss1.csv')
 
+pd.read_csv('loss.csv')
+
+import matplotlib.pyplot as plt
+plt.figure() 
+loss1.plot()
+plt.ylim([0, ])
+plt.axhline(y=0.693, color='k', linestyle='-')
+plt.legend(loc='best')
+
+import pandas as pd
+loss1 = pd.DataFrame({'fake' : d_f1_epoch, 'real' : d_r1_epoch})
+
+
+
+headerList = ['fakeloss_x' ,'fakeloss_y' , 'realloss_x', 'realloss_y']
+
+loss1.to_csv('Loss1.csv')
       
 
-
+loss1 = loss1.iloc[:,1:3]
 import matplotlib.pyplot as plt
 plt.figure() 
 loss1.plot()
 plt.ylim([0, 1.5])
 plt.axhline(y=0.693, color='k', linestyle='-')
 plt.legend(loc='best')
+plt.show()
 
+
+import os,sys
+import argparse
+import h5py
+import scipy.io
+import numpy as np
+from keras.optimizers import Adam
+from keras.initializers import RandomUniform, RandomNormal, glorot_uniform, glorot_normal
+from keras.models import Model
+from keras.layers.core import  Dense, Dropout, Permute, Lambda
+from keras.layers.convolutional import Convolution1D, MaxPooling1D
+from keras import regularizers
+from keras.constraints import maxnorm
+from keras.layers.recurrent import LSTM
+from keras.layers import Bidirectional, Input
+from keras.layers.merge import multiply
+from keras.callbacks import ModelCheckpoint, EarlyStopping
+import tensorflow as tf
+np.random.seed(12345)
+
+'''Build the DeepLncCTCF model'''
+def get_model(params):
+    inputs = Input(shape = (201, 4,))
+    cnn_out = Convolution1D(int(params['filter']), int(params['window_size']),
+    	kernel_initializer=params['kernel_initializer'], 
+    	kernel_regularizer=regularizers.l2(params['l2_reg']), 
+    	activation="relu")(inputs)
+    pooling_out = MaxPooling1D(pool_size=int(params['pool_size']), 
+    	strides=int(params['pool_size']))(cnn_out)
+    dropout1 = Dropout(params['drop_out_cnn'])(pooling_out)
+    lstm_out = Bidirectional(LSTM(int(params['lstm_unit']), return_sequences=True, 
+    	kernel_initializer=params['kernel_initializer'], 
+    	kernel_regularizer=regularizers.l2(params['l2_reg'])), merge_mode = 'concat')(dropout1)
+    a = Permute((2, 1))(lstm_out)
+    a = Dense(lstm_out._keras_shape[1], activation='softmax')(a)
+    a_probs = Permute((2, 1), name='attention_vec')(a)
+    attention_out = multiply([lstm_out, a_probs])
+    attention_out = Lambda(lambda x: K.sum(x, axis=1))(attention_out)
+    dropout2 = Dropout(params['drop_out_lstm'])(attention_out)
+    dense_out = Dense(int(params['dense_unit']), activation='relu', 
+    	kernel_initializer=params['kernel_initializer'], 
+    	kernel_regularizer=regularizers.l2(params['l2_reg']))(dropout2)
+    output = Dense(1, activation='sigmoid')(dense_out)
+    model = Model(inputs=[inputs], outputs=output)
+    adam = Adam(lr=params['learning_rate'],epsilon=10**-8)
+    model.compile(loss='binary_crossentropy', optimizer=adam, metrics=[roc_auc])
+    return model
+
+from keras.models import load_model
+# load data model
+Data = load_model('D:\Downloads\cgan_model_490.h5')
+
+# generate fake data 20000
+X,y = generate_fake_samples(Data, 100,30000,2)# generate 10 example images
+X[0]=np.where(X[0] > 0,1,0)
+#Create new X_train1 and y_train1
+X_train1= np.r_[X_train,X[0]]
+X_train1.shape
+
+#Y_train = Y_train.reshape(72696,1)
+y_train1 = np.r_[Y_train,X[1]]
+y_train1.shape
+
+
+best = {'batch_size': 4.0, 'dense_unit': 80.0, 'drop_out_cnn': 0.2738070724985381, 'drop_out_lstm': 0.16261503928101084, 'filter': 128.0, 'kernel_initializer': 'random_uniform', 'l2_reg': 1.0960198460047699e-05, 'learning_rate': 0.00028511592517082153, 'lstm_unit': 624.0, 'pool_size': 3.0, 'window_size': 9.0}
+dnn_model = get_model(best)
+filepa = "bestmodelnew_humanCGAN.hdf5"
+checkpointer = ModelCheckpoint(filepath=filepa, verbose=1, save_best_only=True)
+earlystopper = EarlyStopping(monitor='val_loss', patience=5, verbose=1)
+dnn_model.fit(X_train1, y_train1, batch_size=2**int(best['batch_size']), epochs=100,shuffle=True, validation_data=(X_val,Y_val), callbacks=[checkpointer,earlystopper])
+predictions = dnn_model.predict(X_test)
+rounded = [round(x[0]) for x in predictions]
+pred_train_prob = predictions
+metrics(Y_test, rounded, pred_train_prob)
+                                              
